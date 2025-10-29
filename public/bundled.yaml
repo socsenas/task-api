@@ -4,9 +4,9 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:3000
-    decription: Local development servers
+    description: Local development server
   - url: https://task-api-mj6a.onrender.com
-    desciption: production server on render
+    description: Production server on Render
 tags:
   - name: Tasks
     description: Task-related endpoints
@@ -63,6 +63,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
+  /tasks/{id}:
+    get:
+      summary: Get a single task by ID
+      tags:
+        - Tasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Task found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
 components:
   schemas:
     Task:
@@ -92,3 +124,11 @@ components:
         error: Validation failed
         details:
           - Title is required
+    NotFoundError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Task not found
+      example:
+        error: Task not found
